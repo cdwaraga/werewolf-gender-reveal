@@ -14,7 +14,7 @@
       min-height: 100vh;
       background: linear-gradient(135deg, #141e30, #243b55);
       transition: background 1s ease;
-      overflow-x: hidden; /* prevent sideways scroll */
+      overflow-x: hidden;
     }
     body.sunrise {
       background: linear-gradient(135deg, #ff9a9e, #fad0c4);
@@ -24,15 +24,15 @@
     .screen {
       display: none;
       flex-direction: column;
-      justify-content: flex-start;  /* content starts at top */
+      justify-content: flex-start;
       align-items: center;
       width: 100%;
-      height: auto;                 /* ✅ let content decide */
-      min-height: 100vh;            /* ✅ still fill viewport */
+      height: auto;
+      min-height: 100vh;
       padding: 20px;
       box-sizing: border-box;
       text-align: center;
-      overflow-y: auto;             /* ✅ scroll only if needed */
+      overflow-y: auto;
     }
     .screen.active { display: flex; }
 
@@ -51,7 +51,7 @@
     }
 
     /* Buttons */
-    .roles button, .vote-buttons button, #seeTruthBtn {
+    .roles button, .vote-buttons button, #seeTruthBtn, #toVotingBtn {
       border: none;
       border-radius: 12px;
       color: white;
@@ -71,7 +71,11 @@
     button:hover { transform: scale(1.05); }
     button:disabled { background: #555; cursor: not-allowed; transform: none; }
 
-    /* ✅ Neutral green for suspense */
+    /* Cast votes button */
+    #toVotingBtn { background: #f59e0b; display: none; } /* Fun amber */
+    #toVotingBtn:hover { background: #d97706; }
+
+    /* Neutral suspense for reveal button */
     #seeTruthBtn { background: #10b981; display: none; }
     #seeTruthBtn:hover { background: #059669; }
 
@@ -93,13 +97,24 @@
 
     /* Reveal */
     #revealOverlay {
-      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
       background: rgba(0,0,0,0.7);
-      display: flex; justify-content: center; align-items: center;
-      color: #ffebf0; font-size: clamp(2.5rem, 12vw, 4rem); font-weight: bold;
-      opacity: 0; visibility: hidden; transition: opacity 1s;
-      z-index: 10; text-align: center;
-      padding: 20px;
+      display: flex;
+      justify-content: center;   /* Center horizontally */
+      align-items: center;       /* Center vertically */
+      flex-direction: column;    /* Stack neatly if multi-line */
+      color: #ffebf0;
+      font-size: clamp(2.5rem, 12vw, 4rem);
+      font-weight: bold;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 1s;
+      z-index: 10;
+      text-align: center;
+      padding: 0;
+      box-sizing: border-box;
     }
 
     /* Stars */
@@ -124,6 +139,8 @@
       <button id="werewolfBtn" onclick="playRole('werewolf')">🐺 Werewolf</button>
     </div>
     <div id="message"></div>
+    <!-- ✅ New button to move to voting -->
+    <button id="toVotingBtn" onclick="goToVoting()">Cast your votes 🗳️</button>
   </div>
 
   <!-- Screen 2: Voting -->
@@ -136,7 +153,6 @@
       <button class="girl" onclick="castVote('girl')">Vote Girl 👧</button>
       <div class="vote-count">Votes: <span id="girlCount">0</span></div>
     </div>
-    <!-- ✅ Updated text -->
     <button id="seeTruthBtn" onclick="startCountdown()">Reveal the Cub!</button>
   </div>
 
@@ -167,20 +183,23 @@
       msg.style.display = "block";
       document.getElementById(role+"Btn").disabled = true;
       clickedRoles[role] = true;
+
+      // ✅ Show proceed button only after all roles are clicked
       if (Object.values(clickedRoles).every(v => v)) {
-        setTimeout(() => {
-          msg.textContent = "";
-          document.getElementById("gameScreen").classList.remove("active");
-          document.getElementById("votingScreen").classList.add("active");
-        }, 2000);
+        document.getElementById("toVotingBtn").style.display = "inline-block";
       }
+    }
+
+    function goToVoting() {
+      document.getElementById("gameScreen").classList.remove("active");
+      document.getElementById("votingScreen").classList.add("active");
     }
 
     function castVote(choice) {
       votes++;
       if (choice === "boy") { boyVotes++; document.getElementById("boyCount").textContent = boyVotes; }
       if (choice === "girl") { girlVotes++; document.getElementById("girlCount").textContent = girlVotes; }
-      if (votes >= 4) {  // show after 4 votes
+      if (votes >= 4) {
         document.getElementById("seeTruthBtn").style.display = "inline-block";
       }
     }
