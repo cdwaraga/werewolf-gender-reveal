@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <title>One Night Werewolf Gender Reveal</title>
-  <!-- ✅ Make it mobile-friendly -->
+  <!-- ✅ Mobile-friendly scaling -->
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
     body {
@@ -32,22 +32,23 @@
 
     .container {
       position: relative;
-      z-index: 1; /* above stars */
-      max-width: 90%;
+      z-index: 1;
+      width: 100%;
+      max-width: 95%;
       margin: 0 auto;
       padding: 10px;
     }
 
     h1 {
-      font-size: clamp(1.8rem, 5vw, 2.8rem); /* responsive */
+      font-size: clamp(1.6rem, 6vw, 2.2rem);
       background: rgba(0,0,0,0.3);
-      padding: 10px 15px;
+      padding: 10px;
       border-radius: 10px;
       display: inline-block;
     }
 
     p {
-      font-size: clamp(1rem, 4vw, 1.5rem);
+      font-size: clamp(1rem, 4.5vw, 1.4rem);
       background: rgba(0,0,0,0.25);
       padding: 6px 10px;
       border-radius: 8px;
@@ -55,11 +56,12 @@
     }
 
     #message {
-      font-size: clamp(1.2rem, 4.5vw, 1.8rem);
+      font-size: clamp(1.1rem, 5vw, 1.6rem);
       background: rgba(0,0,0,0.25);
       padding: 10px 15px;
       border-radius: 8px;
-      display: none; /* hidden until text is shown */
+      display: none;
+      margin-top: 15px;
     }
 
     /* Full page reveal */
@@ -72,7 +74,7 @@
       justify-content: center;
       align-items: center;
       color: #ffebf0;
-      font-size: clamp(2rem, 8vw, 4rem);
+      font-size: clamp(2rem, 10vw, 3rem);
       font-weight: bold;
       text-shadow: 3px 3px 8px rgba(0,0,0,0.8);
       opacity: 0;
@@ -87,9 +89,9 @@
     .roles {
       margin: 20px 0;
       display: flex;
-      justify-content: center;
-      gap: 10px;
-      flex-wrap: wrap;
+      flex-direction: column; /* stack vertically */
+      gap: 15px;
+      align-items: center;
     }
 
     button {
@@ -97,15 +99,17 @@
       border: none;
       border-radius: 12px;
       color: white;
-      font-size: clamp(1rem, 4vw, 1.5rem);
-      padding: 12px 20px;
+      font-size: clamp(1rem, 5vw, 1.3rem);
+      padding: 15px 20px;
+      width: 80%; /* wide buttons for thumb tap */
+      max-width: 300px;
       cursor: pointer;
       transition: transform 0.3s, background 0.3s;
     }
 
     button:hover {
       background: #666;
-      transform: scale(1.1);
+      transform: scale(1.05);
     }
 
     button:disabled {
