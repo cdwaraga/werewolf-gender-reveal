@@ -63,19 +63,17 @@
       transition: transform 0.2s, background 0.3s;
       box-shadow: 0 4px 12px rgba(0,0,0,0.2);
     }
-    .roles button { background: #3b82f6; } /* Blue */
+    .roles button { background: #3b82f6; }
     .vote-buttons button { background: #3b82f6; }
     .vote-buttons button:hover { background: #2563eb; }
-    .vote-buttons button.girl { background: #ec4899; }  /* Girl button pink */
+    .vote-buttons button.girl { background: #ec4899; }
     .vote-buttons button.girl:hover { background: #db2777; }
     button:hover { transform: scale(1.05); }
     button:disabled { background: #555; cursor: not-allowed; transform: none; }
 
-    /* Cast votes button */
-    #toVotingBtn { background: #f59e0b; display: none; } /* Fun amber */
+    #toVotingBtn { background: #f59e0b; display: none; }
     #toVotingBtn:hover { background: #d97706; }
 
-    /* Neutral suspense for reveal button */
     #seeTruthBtn { background: #10b981; display: none; }
     #seeTruthBtn:hover { background: #059669; }
 
@@ -93,7 +91,16 @@
       text-align: center;
     }
     #countdownText { font-size: clamp(1.5rem, 6vw, 2.5rem); margin-bottom: 20px; }
-    #countdownNumber { font-size: clamp(3rem, 15vw, 6rem); font-weight: 600; }
+    #countdownNumber {
+      font-size: clamp(3rem, 15vw, 6rem);
+      font-weight: 600;
+      animation: none;
+    }
+    @keyframes popFade {
+      0% { transform: scale(0.5); opacity: 0; }
+      50% { transform: scale(1.3); opacity: 1; }
+      100% { transform: scale(1); opacity: 1; }
+    }
 
     /* Reveal */
     #revealOverlay {
@@ -102,9 +109,9 @@
       width: 100%; height: 100%;
       background: rgba(0,0,0,0.7);
       display: flex;
-      justify-content: center;   /* Center horizontally */
-      align-items: center;       /* Center vertically */
-      flex-direction: column;    /* Stack neatly if multi-line */
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
       color: #ffebf0;
       font-size: clamp(2.5rem, 12vw, 4rem);
       font-weight: bold;
@@ -139,7 +146,6 @@
       <button id="werewolfBtn" onclick="playRole('werewolf')">🐺 Werewolf</button>
     </div>
     <div id="message"></div>
-    <!-- ✅ New button to move to voting -->
     <button id="toVotingBtn" onclick="goToVoting()">Cast your votes 🗳️</button>
   </div>
 
@@ -153,7 +159,7 @@
       <button class="girl" onclick="castVote('girl')">Vote Girl 👧</button>
       <div class="vote-count">Votes: <span id="girlCount">0</span></div>
     </div>
-    <button id="seeTruthBtn" onclick="startCountdown()">Reveal the Cub!</button>
+    <button id="seeTruthBtn" onclick="startCountdown()">Reveal the Cub</button>
   </div>
 
   <!-- Countdown -->
@@ -173,7 +179,7 @@
       seer: "🔮 The crystal ball shows a swirl of pink cotton candy 🍭 and blue bubblegum 🍬… but it fades before I can be sure.",
       werewolf: "🐺 The cub is coming… the howl is fierce like a little lad 🧢, but the giggle sounds sweet like a lass 🎀."
     };
-    const numberEmojis = ["3️⃣","2️⃣","1️⃣"];
+    const numberEmojis = ["5️⃣","4️⃣","3️⃣","2️⃣","1️⃣"];
     let clickedRoles = { villager: false, seer: false, werewolf: false };
     let votes = 0, boyVotes = 0, girlVotes = 0;
 
@@ -183,8 +189,6 @@
       msg.style.display = "block";
       document.getElementById(role+"Btn").disabled = true;
       clickedRoles[role] = true;
-
-      // ✅ Show proceed button only after all roles are clicked
       if (Object.values(clickedRoles).every(v => v)) {
         document.getElementById("toVotingBtn").style.display = "inline-block";
       }
@@ -208,28 +212,38 @@
       document.getElementById("votingScreen").classList.remove("active");
       const countdown = document.getElementById("countdown");
       const countdownNum = document.getElementById("countdownNumber");
-      countdown.style.visibility = "visible"; countdown.style.opacity = "1";
+      countdown.style.visibility = "visible"; 
+      countdown.style.opacity = "1";
+
       let countIndex = 0;
-      countdownNum.textContent = numberEmojis[countIndex];
-      const interval = setInterval(() => {
+      showNumber();
+
+      function showNumber() {
+        countdownNum.textContent = numberEmojis[countIndex];
+        countdownNum.style.animation = "none"; // reset
+        void countdownNum.offsetWidth;         // reflow
+        countdownNum.style.animation = "popFade 1s ease"; // animate
+
         countIndex++;
         if (countIndex < numberEmojis.length) {
-          countdownNum.textContent = numberEmojis[countIndex];
+          setTimeout(showNumber, 1000);
         } else {
-          clearInterval(interval);
-          countdown.style.opacity = "0";
           setTimeout(() => {
-            countdown.style.visibility = "hidden";
-            reveal();
-          }, 500);
+            countdown.style.opacity = "0";
+            setTimeout(() => {
+              countdown.style.visibility = "hidden";
+              reveal();
+            }, 500);
+          }, 1000);
         }
-      }, 1000);
+      }
     }
 
     function reveal() {
       document.body.classList.add("sunrise");
       const revealOverlay = document.getElementById("revealOverlay");
-      revealOverlay.style.visibility = "visible"; revealOverlay.style.opacity = "1";
+      revealOverlay.style.visibility = "visible"; 
+      revealOverlay.style.opacity = "1";
       launchConfetti();
       document.getElementById("stars").style.opacity = "0";
     }
