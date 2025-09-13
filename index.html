@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <title>Chandra & Hema's One Night Werewolf Gender Reveal</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <!-- Modern Google Font -->
+  <!-- Google Font -->
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
   <style>
     body {
@@ -102,6 +102,46 @@
       100% { transform: scale(1); opacity: 1; }
     }
 
+    /* Ready screen */
+    #readyScreen {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(0,0,0,0.85);
+      display: flex;
+      flex-direction: column;
+      justify-content: center; align-items: center;
+      z-index: 12;
+      visibility: hidden; opacity: 0;
+      transition: opacity 0.5s ease;
+      text-align: center;
+    }
+    #readyScreen h2 {
+      font-size: clamp(1.8rem, 6vw, 2.5rem);
+      margin-bottom: 20px;
+    }
+    #readyScreen button {
+      border: none;
+      border-radius: 12px;
+      color: white;
+      font-size: clamp(1rem, 5vw, 1.2rem);
+      padding: 15px 20px;
+      margin: 10px 0;
+      width: 70%; max-width: 250px;
+      cursor: pointer;
+      transition: transform 0.2s, background 0.3s;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    }
+    #yesBtn { background: #10b981; }
+    #yesBtn:hover { background: #059669; }
+    #noBtn { background: #f59e0b; }
+    #noBtn:hover { background: #d97706; }
+    @keyframes wiggle {
+      0%, 100% { transform: rotate(0deg); }
+      25% { transform: rotate(5deg); }
+      75% { transform: rotate(-5deg); }
+    }
+
     /* Reveal */
     #revealOverlay {
       position: fixed;
@@ -159,7 +199,7 @@
       <button class="girl" onclick="castVote('girl')">Vote Girl 👧</button>
       <div class="vote-count">Votes: <span id="girlCount">0</span></div>
     </div>
-    <button id="seeTruthBtn" onclick="startCountdown()">Reveal the Cub</button>
+    <button id="seeTruthBtn" onclick="startCountdown()">Reveal the Cub!</button>
   </div>
 
   <!-- Countdown -->
@@ -168,8 +208,15 @@
     <div id="countdownNumber"></div>
   </div>
 
+  <!-- Ready Screen -->
+  <div id="readyScreen">
+    <h2>Are you ready??</h2>
+    <button id="yesBtn" onclick="finalReveal()">Yes, let’s go 🚀</button>
+    <button id="noBtn" onclick="wiggleNo()">Not yet 😅</button>
+  </div>
+
   <!-- Reveal -->
-  <div id="revealOverlay">🎀 GIRL 🎀</div>
+  <div id="revealOverlay">🎀 It's a GIRL 🎀</div>
 
   <canvas id="confetti"></canvas>
 
@@ -220,9 +267,9 @@
 
       function showNumber() {
         countdownNum.textContent = numberEmojis[countIndex];
-        countdownNum.style.animation = "none"; // reset
-        void countdownNum.offsetWidth;         // reflow
-        countdownNum.style.animation = "popFade 1s ease"; // animate
+        countdownNum.style.animation = "none";
+        void countdownNum.offsetWidth;
+        countdownNum.style.animation = "popFade 1s ease";
 
         countIndex++;
         if (countIndex < numberEmojis.length) {
@@ -232,11 +279,31 @@
             countdown.style.opacity = "0";
             setTimeout(() => {
               countdown.style.visibility = "hidden";
-              reveal();
+              // Show ready screen instead of reveal
+              const ready = document.getElementById("readyScreen");
+              ready.style.visibility = "visible";
+              ready.style.opacity = "1";
             }, 500);
           }, 1000);
         }
       }
+    }
+
+    function finalReveal() {
+      const ready = document.getElementById("readyScreen");
+      ready.style.opacity = "0";
+      setTimeout(() => {
+        ready.style.visibility = "hidden";
+        reveal();
+      }, 500);
+    }
+
+    function wiggleNo() {
+      const noBtn = document.getElementById("noBtn");
+      noBtn.style.animation = "wiggle 0.5s";
+      noBtn.addEventListener("animationend", () => {
+        noBtn.style.animation = "";
+      }, { once: true });
     }
 
     function reveal() {
