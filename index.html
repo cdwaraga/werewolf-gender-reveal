@@ -11,7 +11,7 @@
       font-family: 'Poppins', sans-serif;
       color: white;
       margin: 0; padding: 0;
-      min-height: 100vh; /* ✅ allow taller content */
+      min-height: 100vh;
       background: linear-gradient(135deg, #141e30, #243b55);
       transition: background 1s ease;
       overflow-x: hidden; /* prevent sideways scroll */
@@ -24,14 +24,15 @@
     .screen {
       display: none;
       flex-direction: column;
-      justify-content: flex-start;  /* ✅ start content from top */
+      justify-content: flex-start;  /* content starts at top */
       align-items: center;
       width: 100%;
-      min-height: 100vh;             /* ✅ flexible height */
+      height: auto;                 /* ✅ let content decide */
+      min-height: 100vh;            /* ✅ still fill viewport */
       padding: 20px;
       box-sizing: border-box;
       text-align: center;
-      overflow-y: auto;              /* ✅ enable vertical scroll */
+      overflow-y: auto;             /* ✅ scroll only if needed */
     }
     .screen.active { display: flex; }
 
@@ -135,7 +136,8 @@
       <button class="girl" onclick="castVote('girl')">Vote Girl 👧</button>
       <div class="vote-count">Votes: <span id="girlCount">0</span></div>
     </div>
-    <button id="seeTruthBtn" onclick="startCountdown()">See the Truth!</button>
+    <!-- ✅ Updated text -->
+    <button id="seeTruthBtn" onclick="startCountdown()">Reveal the Cub!</button>
   </div>
 
   <!-- Countdown -->
@@ -178,7 +180,7 @@
       votes++;
       if (choice === "boy") { boyVotes++; document.getElementById("boyCount").textContent = boyVotes; }
       if (choice === "girl") { girlVotes++; document.getElementById("girlCount").textContent = girlVotes; }
-      if (votes >= 4) {  // ✅ show after 4 votes
+      if (votes >= 4) {  // show after 4 votes
         document.getElementById("seeTruthBtn").style.display = "inline-block";
       }
     }
