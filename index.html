@@ -165,13 +165,28 @@
     }
 
     /* Envelope emoji bounce */
-    #revealOverlay span {
+    #envelopeEmoji {
       display: inline-block;
       animation: bounce 1.2s infinite;
+      cursor: pointer;
     }
     @keyframes bounce {
       0%, 100% { transform: translateY(0); }
       50% { transform: translateY(-10px); }
+    }
+
+    /* Easter egg text */
+    #envelopeEasterEgg {
+      margin-top: 20px;
+      font-size: clamp(1.2rem, 5vw, 2rem);
+      color: #ffd700; /* gold */
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 1s ease;
+    }
+    #envelopeEasterEgg.show {
+      opacity: 1;
+      visibility: visible;
     }
 
     /* Stars */
@@ -226,7 +241,10 @@
   </div>
 
   <!-- Reveal -->
-  <div id="revealOverlay">Check the envelope! <span>✉️</span></div>
+  <div id="revealOverlay">
+    Check the envelope! <span id="envelopeEmoji">✉️</span>
+    <div id="envelopeEasterEgg">Ummi guessed it correctly!! 😎😁</div>
+  </div>
 
   <canvas id="confetti"></canvas>
 
@@ -239,6 +257,7 @@
     const numberEmojis = ["5️⃣","4️⃣","3️⃣","2️⃣","1️⃣"];
     let clickedRoles = { villager: false, seer: false, werewolf: false };
     let votes = 0, boyVotes = 0, girlVotes = 0;
+    let envelopeClicks = 0;
 
     function playRole(role) {
       const msg = document.getElementById("message");
@@ -323,6 +342,14 @@
       launchConfetti();
       document.getElementById("stars").style.opacity = "0";
     }
+
+    // Easter Egg for envelope
+    document.getElementById("envelopeEmoji").addEventListener("click", () => {
+      envelopeClicks++;
+      if (envelopeClicks === 7) {
+        document.getElementById("envelopeEasterEgg").classList.add("show");
+      }
+    });
 
     // Stars
     function generateStars(count=60) {
