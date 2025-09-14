@@ -246,7 +246,7 @@
   <div id="revealOverlay">
     Check the envelope! 😉
     <div><span id="envelopeEmoji">✉️</span></div>
-    <div id="envelopeEasterEgg">Our Ummi guessed it correctly!! 😎😁</div>
+    <div id="envelopeEasterEgg">Ummi guessed it correctly!! 😎😁</div>
   </div>
 
   <canvas id="confetti"></canvas>
@@ -372,11 +372,39 @@
     const canvas=document.getElementById("confetti"), ctx=canvas.getContext("2d");
     canvas.width=window.innerWidth; canvas.height=window.innerHeight;
     let confettiParticles=[];
-    function randomColor(){ return ["#ffb6c1","#ff69b4","#ffc0cb","#ffffff"][Math.floor(Math.random()*4)]; }
-    function launchConfetti(){ confettiParticles=[]; for (let i=0;i<200;i++){ confettiParticles.push({x:Math.random()*canvas.width,y:Math.random()*canvas.height-canvas.height,r:Math.random()*6+4,d:Math.random()*0.5+0.5,color:randomColor(),tilt:Math.floor(Math.random()*10)-10}); } animateConfetti(); }
-    function animateConfetti(){ ctx.clearRect(0,0,canvas.width,canvas.height); for (let p of confettiParticles){ ctx.fillStyle=p.color; ctx.fillRect(p.x,p.y,p.r,p.r); p.y+=p.d*5; p.x+=Math.sin(p.tilt); if (p.y>canvas.height){ p.y=-10; p.x=Math.random()*canvas.width; } } requestAnimationFrame(animateConfetti); }
+    function randomColor(){ 
+      const colors = ["#ff69b4", "#4dabf7", "#ffffff"]; // pink, blue, white
+      return colors[Math.floor(Math.random() * colors.length)];
+    }
+    function launchConfetti(){ 
+      confettiParticles=[]; 
+      for (let i=0;i<200;i++){ 
+        confettiParticles.push({
+          x:Math.random()*canvas.width,
+          y:Math.random()*canvas.height-canvas.height,
+          r:Math.random()*6+4,
+          d:Math.random()*0.5+0.5,
+          color:randomColor(),
+          tilt:Math.floor(Math.random()*10)-10
+        }); 
+      } 
+      animateConfetti(); 
+    }
+    function animateConfetti(){ 
+      ctx.clearRect(0,0,canvas.width,canvas.height); 
+      for (let p of confettiParticles){ 
+        ctx.fillStyle=p.color; 
+        ctx.fillRect(p.x,p.y,p.r,p.r); 
+        p.y+=p.d*5; 
+        p.x+=Math.sin(p.tilt); 
+        if (p.y>canvas.height){ 
+          p.y=-10; 
+          p.x=Math.random()*canvas.width; 
+        } 
+      } 
+      requestAnimationFrame(animateConfetti); 
+    }
     window.addEventListener("resize",()=>{canvas.width=window.innerWidth;canvas.height=window.innerHeight;});
   </script>
 </body>
 </html>
-
